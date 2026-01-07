@@ -10,7 +10,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://*.duckdice.io/*", "file:///*test.html*"],
+      "matches": ["*://*.duckdice.io/*", "file:///*/*test.html"],
       "js": ["content.js"],
       "run_at": "document_end"
     }

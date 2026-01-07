@@ -35,7 +35,7 @@
   }
   
   // Function to remove bobstone's messages
-  function removeBotstoneMessages() {
+  function removeBobstoneMessages() {
     // Common chat message selectors
     const messageSelectors = [
       '.message',
@@ -63,13 +63,13 @@
   }
   
   // Initial cleanup
-  console.log('[IgnorBob] Extension loaded on DuckDice');
+  console.log('[IgnorBob] Extension loaded');
   
   // Run after page load
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', removeBotstoneMessages);
+    document.addEventListener('DOMContentLoaded', removeBobstoneMessages);
   } else {
-    removeBotstoneMessages();
+    removeBobstoneMessages();
   }
   
   // Watch for new messages being added to the DOM
@@ -83,7 +83,7 @@
     });
     
     if (shouldCheck) {
-      removeBotstoneMessages();
+      removeBobstoneMessages();
     }
   });
   
@@ -94,7 +94,7 @@
   });
   
   // Also run periodically as a fallback
-  setInterval(removeBotstoneMessages, 2000);
+  setInterval(removeBobstoneMessages, 2000);
   
   console.log('[IgnorBob] Monitoring for bobstone messages...');
 })();
