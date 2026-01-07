@@ -8,27 +8,62 @@
   
   // Function to check if an element contains bobstone's message
   function isMessageFromBobstone(element) {
+    const blocked = BLOCKED_USERNAME.toLowerCase();
+    const matchesBlocked = (value) => {
+      if (!value) return false;
+      const normalized = value.toLowerCase();
+      if (normalized === blocked) return true;
+      const boundaryPattern = new RegExp(`\\b${blocked}\\b`, 'i');
+      return boundaryPattern.test(value);
+    };
+
     // Check for username in the message element
     const usernameElements = element.querySelectorAll('.username, [class*="username"], [class*="user"], [class*="name"]');
     
     for (let usernameEl of usernameElements) {
-      const username = usernameEl.textContent.trim().toLowerCase();
-      if (username === BLOCKED_USERNAME.toLowerCase() || username.includes(BLOCKED_USERNAME.toLowerCase())) {
+      if (matchesBlocked(usernameEl.textContent.trim())) {
         return true;
       }
     }
     
     // Alternative: Check text content directly for username patterns
     const textContent = element.textContent || '';
-    const usernamePattern = new RegExp(`\\b${BLOCKED_USERNAME}\\b`, 'i');
+    if (matchesBlocked(textContent)) {
+      return true;
+    }
     
     // Check if the element has attributes that might contain username
     const dataUsername = element.getAttribute('data-username') || 
                         element.getAttribute('data-user') || 
                         element.getAttribute('data-name');
     
-    if (dataUsername && dataUsername.toLowerCase() === BLOCKED_USERNAME.toLowerCase()) {
+    if (matchesBlocked(dataUsername)) {
       return true;
+    }
+
+    // Check descendant elements for data attributes or profile links
+    const attributeElements = element.querySelectorAll('[data-username], [data-user], [data-name], [data-nickname]');
+    for (let attrEl of attributeElements) {
+      const candidate = attrEl.getAttribute('data-username') ||
+                        attrEl.getAttribute('data-user') ||
+                        attrEl.getAttribute('data-name') ||
+                        attrEl.getAttribute('data-nickname');
+      if (matchesBlocked(candidate)) {
+        return true;
+      }
+    }
+
+    const linkElements = element.querySelectorAll('a[href*="/@"], a[href*="/user/"], a[href*="user="]');
+    const hrefPatterns = [
+      /@([^/?#]+)/,
+      /user\/([^/?#]+)/,
+      /user=([^&#]+)/
+    ];
+    for (let linkEl of linkElements) {
+      const href = linkEl.getAttribute('href') || '';
+      const hrefMatch = hrefPatterns.map((pattern) => href.match(pattern)).find(Boolean);
+      if (hrefMatch && matchesBlocked(hrefMatch[1])) return true;
+      if (matchesBlocked(linkEl.textContent.trim())) return true;
     }
     
     return false;
@@ -43,7 +78,8 @@
       '[class*="message"]',
       '[class*="chat"]',
       'li',
-      'div[class*="Message"]'
+      'div[class*="Message"]',
+      '[class*="profile-block"]'
     ];
     
     messageSelectors.forEach(selector => {
