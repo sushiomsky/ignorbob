@@ -38,6 +38,18 @@ For permanent installation, the extension would need to be signed by Mozilla.
 
 You can verify the extension is working by opening the browser console (F12) and looking for `[IgnorBob]` log messages.
 
+### Testing Locally
+
+For testing without visiting DuckDice:
+
+1. Install the extension
+2. Open `test.html` in your browser
+3. Messages from "bobstone" should be automatically hidden
+4. Use the buttons to add new messages and verify the filtering works in real-time
+5. Check the browser console for `[IgnorBob]` debug messages
+
+**Note for Chrome users:** You may need to enable "Allow access to file URLs" in the extension settings to test with the local HTML file.
+
 ## How It Works
 
 The extension uses a content script that:
@@ -50,7 +62,9 @@ The extension uses a content script that:
 
 - `manifest.json` - Extension configuration
 - `content.js` - Main content script that filters messages
-- `icons/` - Extension icons in various sizes
+- `icons/` - Extension icons in various sizes (16x16, 48x48, 128x128)
+- `test.html` - Local test page for testing the extension without visiting DuckDice
+- `.gitignore` - Git ignore rules for build artifacts and temporary files
 
 ## Development
 
