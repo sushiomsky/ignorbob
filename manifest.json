@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "IgnorBob - Filter DuckDice Chat",
+  "version": "1.0.0",
+  "description": "Filter messages from bobstone user in DuckDice webchat",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.duckdice.io/*", "file:///*/*test.html"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "permissions": [],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "ignorbob@duckdice.filter"
+    }
+  }
+}
